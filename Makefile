@@ -5,8 +5,8 @@ CC = gcc
 
 CC_FLAGS=-g -rdynamic -O3
 
-armyknife-scheme: generate-header-file.c
-	${CC} generate-header-file.c -o generate-header-file
+generate-header-file: generate-header-file.c
+	${CC} ${CC_FLAGS} generate-header-file.c -o generate-header-file
 
 format:
 	clang-format -i generate-header-file.c
