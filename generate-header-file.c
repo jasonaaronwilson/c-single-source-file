@@ -43,6 +43,7 @@ int file_contents_identical(const char* file1, const char* file2);
  * Header files at the top of a C file must look like this:
  *
  * #ifndef _FOOBAR_H_
+ * #define _FOOBAR_H_
  *   **NORMAL HEADER FILE STUFF **
  * #endif /* _FOOBAR_H_ *\/
  *
@@ -147,6 +148,8 @@ process_file_result_t process_file(char* input_file_name) {
   case ERROR_NOT_OVERWRITING_NON_AUTO_GENERATED_HEADER_FILE:
     fprintf(stderr, "ERROR not overwriting existing file %s\n",
             output_file_name);
+    fprintf(stderr, "Is it possible this file was written by hand?\n");
+    exit(1);
     break;
   case HEADER_FILE_WRITTEN:
     fprintf(stderr, "extracted header file to %s\n", output_file_name);
