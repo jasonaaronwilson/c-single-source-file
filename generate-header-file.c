@@ -7,7 +7,7 @@
 
 #define MAX_FILE_NAME_LENGTH 8192
 #define MAX_LINE_LENGTH 8192
-#define GENERATED_FILE_TAG "// Automatically extracted from"
+#define GENERATED_FILE_TAG "// SSCF generated file from:"
 
 typedef int boolean_t;
 #define true ((boolean_t) 1)
@@ -156,6 +156,11 @@ process_file_result_t process_file(char* input_file_name) {
   return status_result;
 }
 
+/**
+ * Create or update the header file with the tmp file as long as they
+ * aren't identical content or if the header file looks like it was
+ * authored by hand.
+ */
 process_file_result_t maybe_move_file(char* real_name, char* tmp_name) {
   if (file_exists(real_name)) {
     if (file_contents_identical(real_name, tmp_name)) {
@@ -171,6 +176,10 @@ process_file_result_t maybe_move_file(char* real_name, char* tmp_name) {
   return HEADER_FILE_WRITTEN;
 }
 
+/**
+ * Look at the first line of a file to see if it is probably one of
+ * our generated files...
+ */
 boolean_t is_generated_file(char* name) {
   char line[MAX_LINE_LENGTH];
   FILE* input = fopen(name, "r");
@@ -186,8 +195,25 @@ boolean_t is_generated_file(char* name) {
   return false;
 }
 
+void help() {
+  fprintf(stderr, "generate-header-file <c-file-1> <c-file-2> ...\n");
+  fprintf(stderr, "\n");
+  fprintf(stderr, "Source files are never modified. Header file names are\n");
+  fprintf(stderr, "Determined from each source file.\n");
+}
+
 int main(int argc, char** argv) {
   for (int i = 1; i < argc; i++) {
+    if (strcmp(argv[i], "help") == 0) {
+      help();
+      exit(0);
+    }
+    if (string_ends_with(argv[i], ".h")
+        || string_ends_with(argv[i], ".hpp")) {
+      fprintf(stderr, "ERROR: filename ends with .h (or .hpp) - should give input file\n\n");
+      help();
+      exit(1);
+    }
     process_file(argv[i]);
   }
   return 0;
