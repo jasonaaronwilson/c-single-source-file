@@ -15,7 +15,7 @@ CLEAN_BINARIES = \
 	a.out generate-header-file
 
 clean:
-	rm -rf *~ docs/*~ test/*~ tests/*~ scheme/*~ ${CLEAN_BINARIES} TAGS doxygen-docs 
+	rm -rf *~ docs/*~ test/*~ tests/*~ scheme/*~ ${CLEAN_BINARIES} TAGS doxygen-docs tests/one-header-block.h
 
 diff: clean
 	git difftool HEAD

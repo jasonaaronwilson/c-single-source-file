@@ -25,7 +25,8 @@ boolean_t string_starts_with(const char* str1, const char* str2);
 
 /* ====================================================================== */
 
-/** Header files at the top of a C file look like this:
+/** 
+ * Header files at the top of a C file look like this:
  *
  *#ifndef _FOOBAR_H_
  *   **NORMAL HEADER FILE STUFF **
@@ -77,6 +78,8 @@ boolean_t process_file(char* input_file_name) {
         exit(-1);
       }
 
+      fprintf(output_file, "// Automatically extracted from %s\n\n", input_file_name);
+
       // write the line we just read
       fprintf(output_file, "%s", line);
 
@@ -92,6 +95,7 @@ boolean_t process_file(char* input_file_name) {
           fprintf(stderr,
                   "ERROR: input ended before header file marker match '%s'\n",
                   input_file_name);
+          exit(-1);
         }
 
         // write the line we just read to the output file we opened
@@ -133,9 +137,16 @@ boolean_t string_ends_with(const char* str1, const char* str2) {
   return strcmp(str1 + (len1 - len2), str2) == 0;
 }
 
+/**
+ * A sane replacement for getline and other ways of reading a string.
+ *
+ * Note that n_read may not be equal to strlen() specifically if
+ * include_newline is false.
+ */
 readline_result_t readline(char* output_buffer, FILE* input,
                            int size_of_output_buffer,
                            boolean_t include_newline) {
+  output_buffer[0] = '\0';
   readline_result_t result = {0};
 
   int n_bytes = 0;
