@@ -1,5 +1,8 @@
 all: generate-header-file
 
+install: 
+	sudo install -m 755 generate-header-file /usr/local/bin/
+
 #CC = clang
 CC = gcc
 
