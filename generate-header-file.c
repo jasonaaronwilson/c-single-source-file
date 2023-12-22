@@ -8,6 +8,7 @@
 #define MAX_FILE_NAME_LENGTH 8192
 #define MAX_LINE_LENGTH 8192
 #define GENERATED_FILE_TAG "// SSCF generated file from:"
+#define ADD_LINE_DIRECTIVE 1
 
 typedef int boolean_t;
 #define true ((boolean_t) 1)
@@ -80,9 +81,13 @@ process_file_result_t process_file(char* input_file_name) {
     exit(-1);
   }
 
+  int c_file_line_number = 0;
+
   while (1) {
     readline_result_t status
         = readline(line, input_file, MAX_LINE_LENGTH, true);
+    c_file_line_number++;
+
     if (status.overflow) {
       fprintf(stderr, "ERROR: Max line length exceeded in file %s\n",
               input_file_name);
@@ -104,6 +109,9 @@ process_file_result_t process_file(char* input_file_name) {
       }
 
       fprintf(output_file, "%s %s\n\n", GENERATED_FILE_TAG, input_file_name);
+#ifdef ADD_LINE_DIRECTIVE 
+      fprintf(output_file, "#line %d \"%s\"\n", c_file_line_number, input_file_name);
+#endif
 
       // write the line we just read
       fprintf(output_file, "%s", line);
@@ -111,6 +119,7 @@ process_file_result_t process_file(char* input_file_name) {
       while (1) {
         readline_result_t status
             = readline(line, input_file, MAX_LINE_LENGTH, true);
+        c_file_line_number++;
         if (status.overflow) {
           fprintf(stderr, "ERROR: Max line length exceeded in file %s\n",
                   input_file_name);
