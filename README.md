@@ -4,6 +4,21 @@ A trivial tool to allow a single file to contain both the header file
 and its implementation so that the number of files in a source tree
 can be minimized.
 
+## Status
+
+I haven't changed this tool in a while despite using it for several
+projects. It was simple enough to get right.
+
+The successor tool I'm working will be part of my omni-c project. This
+version will simply automatically generate a header file from a C
+file. It's smart enough to extract all of the function prototypes,
+inlined functions, structure, typedefs, macros, etc. Although I've had
+success putting almost 5K lines of code through it's parser, it's
+under enough flux that I can't recommend it right now. It may be ready
+for a demo release in mid-september though I'll need an extensive test
+suite and I'll want to try it out on code in the while before feeling
+like it's ready to demo.
+
 ## Why?
 
 Writing header files is a pain - one which we don't change (we only
